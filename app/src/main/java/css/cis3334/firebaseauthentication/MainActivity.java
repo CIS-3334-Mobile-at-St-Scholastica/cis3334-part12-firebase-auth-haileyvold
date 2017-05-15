@@ -38,6 +38,10 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
+    /**
+     * OnCreate, this method connects all the layout widgets with their private variables,
+     * before then getting the instance for Firebase mAuth. Sets the view to activity_main
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,28 +58,21 @@ public class MainActivity extends AppCompatActivity {
 
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Log.d("CIS3334", "normal login ");
+                // signing in the user with email and password
                 signIn(editTextEmail.getText().toString(), editTextPassword.getText().toString());
             }
         });
 
         buttonCreateLogin.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Log.d("CIS3334", "Create Account ");
+                // creating new user account
                 createAccount(editTextEmail.getText().toString(), editTextPassword.getText().toString());
-            }
-        });
-
-        buttonGoogleLogin.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Log.d("CIS3334", "Google login ");
-                googleSignIn();
             }
         });
 
         buttonSignOut.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Log.d("CIS3334", "Logging out - signOut ");
+                // signing out the user
                 signOut();
             }
         });
@@ -86,10 +83,8 @@ public class MainActivity extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
-                    Log.d("cis3334", "onAuthStateChanged:signed_in:" + user.getUid());
                 } else {
                     // User is signed out
-                    Log.d("cis3334", "onAuthStateChanged:signed_out");
                 }
                 // ...
             }
@@ -97,6 +92,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Calls the AuthStateListener when the app starts
+     */
     @Override
     public void onStart() {
         super.onStart();
@@ -104,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    /** End the AuthStateListener when the app stops */
     public void onStop() {
         super.onStop();
         if (mAuthListener != null) {
@@ -111,13 +110,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Creates a new user account when the corresponding button is clicked. Pops up a toast message
+     * if the account creation fails.
+     */
     private void createAccount(String email, String password) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d("cis3334", "createUserWithEmail:onComplete:" + task.isSuccessful());
-
                         // If sign in fails, display a message to the user. If sign in succeeds
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
@@ -131,13 +132,15 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-    private void signIn(String email, String password){
+    /**
+     * Signs in the user using regular email and password authentication. Pops up a toast message
+     * if authentication fails
+     */
+    private void signIn(String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d("cis3334", "signInWithEmail:onComplete:" + task.isSuccessful());
-
                         // If sign in fails, display a message to the user. If sign in succeeds
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
@@ -152,15 +155,11 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-    private void signOut () {
+    /**
+     * Signs out the user
+     */
+    private void signOut() {
         mAuth.signOut();
     }
-
-    private void googleSignIn() {
-
-    }
-
-
-
 
 }
